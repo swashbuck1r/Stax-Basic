@@ -1,0 +1,4 @@
+This is the basic application template used by default for applications created on Stax.net.  To use this template locally, sync it, and then run the following Stax SDK command:
+   stax create -t <path_to_repo> APPNAME
+
+

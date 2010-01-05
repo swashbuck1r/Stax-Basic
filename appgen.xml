@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ ~ Copyright 2010 Stax Networks, Inc.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~     http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+<project name="basic-appgen" default="generate" xmlns:appgen="net.stax.appgen">
+    <typedef name="copy" classname="net.stax.appgen.CopyTask" uri="net.stax.appgen"/>
+    <typedef name="template" classname="net.stax.appgen.TemplateTask" uri="net.stax.appgen"/>
+    <defaultexcludes add=".bzr/**"/>
+    <defaultexcludes add=".bzrignore"/>
+    <defaultexcludes add="appgen*"/>
+    
+    <appgen:template id="apptemplate">
+        <property name="appid" value="${appid}" />
+        <property name="package" value="${package}" />
+    </appgen:template>
+    
+    <target name="generate">
+        <!-- Copy and process templatized files -->
+        <appgen:copy todir="${outputdir}/src" packagename="${package}">
+            <template refid="apptemplate" />
+            <fileset dir="src" />
+        </appgen:copy>
+        
+        <appgen:copy todir="${outputdir}">
+            <template refid="apptemplate" />
+            <fileset dir="${basedir}">
+                <include name="webapp/WEB-INF/web.xml" />
+                <include name="webapp/WEB-INF/stax-web.xml" />
+                <include name=".project" />
+            </fileset>
+        </appgen:copy>
+    
+        <!-- Copy the remaining files (excluding templates) -->
+        <copy todir="${outputdir}" >
+            <fileset dir="${basedir}">
+                <exclude name="src/**" />
+                <exclude name="WEB-INF/web.xml" />
+                <exclude name="webapp/WEB-INF/stax-web.xml" />
+                <exclude name=".project" />
+            </fileset>
+        </copy>
+    </target>
+
+</project>
